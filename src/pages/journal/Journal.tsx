@@ -1,9 +1,26 @@
+import { useState } from 'react';
 import { Button } from '../../components/ui/button';
-import { Plus, Calendar, Tag } from 'lucide-react';
+import { Input } from '../../components/ui/input';
+import { Plus, Calendar, Tag, Search } from 'lucide-react';
 import { Badge } from '../../components/ui/badge';
+import { JournalEntryDialog } from '../../components/blocks/JournalEntryDialog';
+
+interface JournalEntry {
+  id: number;
+  date: string;
+  time: string;
+  duration: string;
+  title: string;
+  note: string;
+  tags: string[];
+  xp: number;
+  mood: string;
+}
 
 export default function Journal() {
-  const entries = [
+  const [isDialogOpen, setIsDialogOpen] = useState(false);
+  const [searchQuery, setSearchQuery] = useState('');
+  const [entries, setEntries] = useState<JournalEntry[]>([
     {
       id: 1,
       date: '6 nov. 2025',
@@ -13,6 +30,7 @@ export default function Journal() {
       note: 'Super session ! J\'ai enfin compris les dérivées. Ray m\'a aidé avec des exemples concrets.',
       tags: ['Maths', 'Révision'],
       xp: 25,
+      mood: '😊',
     },
     {
       id: 2,
@@ -23,6 +41,7 @@ export default function Journal() {
       note: 'Chapitre sur la mécanique. Quelques difficultés mais j\'ai bien avancé.',
       tags: ['Physique', 'Exercices'],
       xp: 15,
+      mood: '😤',
     },
     {
       id: 3,
@@ -33,6 +52,7 @@ export default function Journal() {
       note: 'Création de fiches sur la Révolution française. Méthode efficace !',
       tags: ['Histoire', 'Fiches'],
       xp: 30,
+      mood: '🔥',
     },
     {
       id: 4,
@@ -43,8 +63,24 @@ export default function Journal() {
       note: 'Lu 3 chapitres. Vocabulaire noté dans le carnet.',
       tags: ['Anglais', 'Lecture'],
       xp: 20,
+      mood: '😌',
     },
-  ];
+  ]);
+
+  const handleSaveEntry = (newEntry: Omit<JournalEntry, 'id'>) => {
+    const entry: JournalEntry = {
+      ...newEntry,
+      id: entries.length > 0 ? Math.max(...entries.map(e => e.id)) + 1 : 1,
+    };
+    setEntries([entry, ...entries]);
+  };
+
+  // Filter entries based on search query
+  const filteredEntries = entries.filter((entry) =>
+    entry.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
+    entry.note.toLowerCase().includes(searchQuery.toLowerCase()) ||
+    entry.tags.some(tag => tag.toLowerCase().includes(searchQuery.toLowerCase()))
+  );
 
   return (
     <div className="flex-1 overflow-auto p-6">
@@ -60,10 +96,24 @@ export default function Journal() {
             </p>
           </div>
           
-          <Button className="bg-gradient-to-r from-[var(--color-primary-start)] to-[var(--color-primary-mid)] hover:opacity-90 gap-2">
+          <Button 
+            onClick={() => setIsDialogOpen(true)}
+            className="bg-gradient-to-r from-[var(--color-primary-start)] to-[var(--color-primary-mid)] hover:opacity-90 gap-2"
+          >
             <Plus className="w-5 h-5" />
             Nouvelle entrée
           </Button>
+        </div>
+
+        {/* Search Bar */}
+        <div className="relative">
+          <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
+          <Input
+            placeholder="Rechercher dans tes entrées..."
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+            className="pl-12 bg-white/80 backdrop-blur-sm border-white/50 h-12 rounded-2xl"
+          />
         </div>
 
         {/* Timeline */}
@@ -73,7 +123,8 @@ export default function Journal() {
 
           {/* Entries */}
           <div className="space-y-8">
-            {entries.map((entry, index) => (
+            {filteredEntries.length > 0 ? (
+              filteredEntries.map((entry, index) => (
               <div key={entry.id} className="relative pl-16">
                 {/* Timeline dot */}
                 <div className="absolute left-4 top-6 w-5 h-5 rounded-full bg-gradient-to-br from-[var(--color-primary-start)] to-[var(--color-primary-mid)] border-4 border-[var(--color-bg-start)]"></div>
@@ -84,6 +135,7 @@ export default function Journal() {
                   <div className="flex items-start justify-between mb-3">
                     <div className="flex-1">
                       <div className="flex items-center gap-3 mb-1">
+                        <span className="text-2xl">{entry.mood}</span>
                         <Calendar className="w-4 h-4 text-[var(--color-text-muted)]" />
                         <span className="text-sm text-[var(--color-text-muted)]">
                           {entry.date} • {entry.time}
@@ -127,9 +179,24 @@ export default function Journal() {
                   </div>
                 </div>
               </div>
-            ))}
+              ))
+            ) : (
+              <div className="text-center py-12">
+                <Search className="w-16 h-16 text-gray-300 mx-auto mb-4" />
+                <p className="text-[var(--color-text-muted)]">
+                  Aucune entrée trouvée pour "{searchQuery}"
+                </p>
+              </div>
+            )}
           </div>
         </div>
+
+        {/* Journal Entry Dialog */}
+        <JournalEntryDialog
+          open={isDialogOpen}
+          onOpenChange={setIsDialogOpen}
+          onSave={handleSaveEntry}
+        />
       </div>
     </div>
   );

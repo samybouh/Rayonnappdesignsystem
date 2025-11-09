@@ -1,18 +1,26 @@
+import { useState } from 'react';
 import { Sparkles, MessageSquare, CheckCircle2 } from 'lucide-react';
 import { Button } from '../ui/button';
 import { motion } from 'motion/react';
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from '../ui/dialog';
+import { TodoList } from '../blocks/TodoList';
+import { MissionDialog } from '../blocks/MissionDialog';
 
 export function RightRail() {
+  const [isTodoOpen, setIsTodoOpen] = useState(false);
+  const [isMissionOpen, setIsMissionOpen] = useState(false);
+  
   const todayTasks = [
     { id: '1', label: 'Salut! Comment va ta journée ?', icon: '👋' },
   ];
 
   return (
+    <>
     <motion.aside 
       initial={{ x: 20, opacity: 0 }}
       animate={{ x: 0, opacity: 1 }}
       transition={{ duration: 0.3 }}
-      className="w-[280px] bg-gradient-to-br from-[#FEF3C7] to-[#D1FAE5] p-4 flex flex-col gap-4"
+      className="w-[280px] pt-6 px-4 pb-4 flex flex-col gap-4"
     >
       {/* Ray Assistant Card */}
       <motion.div 
@@ -56,7 +64,9 @@ export function RightRail() {
         initial={{ y: 20, opacity: 0 }}
         animate={{ y: 0, opacity: 1 }}
         transition={{ duration: 0.4, delay: 0.2 }}
-        className="bg-white/80 backdrop-blur-sm rounded-2xl p-5 shadow-sm"
+        whileHover={{ scale: 1.02 }}
+        onClick={() => setIsTodoOpen(true)}
+        className="bg-white/80 backdrop-blur-sm rounded-2xl p-5 shadow-sm cursor-pointer hover:shadow-md transition-shadow"
       >
         <div className="flex items-center justify-between mb-3">
           <h4 className="font-semibold text-[var(--color-text-primary)] text-sm">
@@ -111,7 +121,9 @@ export function RightRail() {
         initial={{ y: 20, opacity: 0 }}
         animate={{ y: 0, opacity: 1 }}
         transition={{ duration: 0.4, delay: 0.3 }}
-        className="bg-gradient-to-br from-[#FCA5A5] to-[#FCA5A5]/50 rounded-2xl p-5 shadow-sm text-white"
+        whileHover={{ scale: 1.02 }}
+        onClick={() => setIsMissionOpen(true)}
+        className="bg-gradient-to-br from-[#FCA5A5] to-[#FCA5A5]/50 rounded-2xl p-5 shadow-sm text-white cursor-pointer hover:shadow-md transition-shadow"
       >
         <div className="flex items-start justify-between mb-3">
           <div>
@@ -127,5 +139,24 @@ export function RightRail() {
         </div>
       </motion.div>
     </motion.aside>
+
+    {/* Todo List Dialog */}
+    <Dialog open={isTodoOpen} onOpenChange={setIsTodoOpen}>
+      <DialogContent className="!max-w-[1400px] sm:!max-w-[1400px] w-[95vw] max-h-[90vh] p-0 bg-gradient-to-br from-purple-50 via-blue-50 to-teal-50 border-2 border-white/50 shadow-2xl" aria-describedby={undefined}>
+        <DialogHeader className="p-8 pb-6 border-b border-purple-100/50">
+          <DialogTitle className="text-3xl font-semibold text-purple-900 flex items-center gap-4">
+            <span className="text-4xl">🎯</span>
+            Objectif quotidien
+          </DialogTitle>
+        </DialogHeader>
+        <div className="overflow-y-auto max-h-[calc(90vh-120px)] px-8 py-6">
+          <TodoList />
+        </div>
+      </DialogContent>
+    </Dialog>
+
+    {/* Mission Dialog */}
+    <MissionDialog open={isMissionOpen} onOpenChange={setIsMissionOpen} />
+    </>
   );
 }

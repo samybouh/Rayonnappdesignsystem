@@ -11,6 +11,7 @@ import Journal from './pages/journal/Journal';
 import Session from './pages/session/Session';
 import Settings from './pages/settings/Settings';
 import Stats from './pages/stats/Stats';
+import Progression from './pages/progression/Progression';
 
 export default function App() {
   return (
@@ -29,10 +30,13 @@ export default function App() {
           <Route path="folders" element={<Folders />} />
           <Route path="methods" element={<Methods />} />
           <Route path="journal" element={<Journal />} />
-          <Route path="session" element={<Session />} />
           <Route path="settings" element={<Settings />} />
           <Route path="stats" element={<Stats />} />
+          <Route path="progression" element={<Progression />} />
         </Route>
+
+        {/* Session - Full screen mode */}
+        <Route path="/session" element={<Session />} />
 
         {/* Catch all */}
         <Route path="*" element={<Navigate to="/" replace />} />

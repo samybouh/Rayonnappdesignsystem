@@ -1,5 +1,6 @@
 import { Zap } from 'lucide-react';
 import { motion } from 'motion/react';
+import { useNavigate } from 'react-router-dom';
 
 interface RayonBadgeProps {
   level: number;
@@ -10,12 +11,14 @@ interface RayonBadgeProps {
 
 export function RayonBadge({ level, xp, xpToNext, compact = false }: RayonBadgeProps) {
   const progress = (xp / xpToNext) * 100;
+  const navigate = useNavigate();
 
   if (compact) {
     return (
       <motion.div 
         whileHover={{ scale: 1.05 }}
-        className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-gradient-to-r from-[#FCD34D] to-[#F59E0B] shadow-sm"
+        onClick={() => navigate('/app/progression')}
+        className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-gradient-to-r from-[#FCD34D] to-[#F59E0B] shadow-sm cursor-pointer"
       >
         <Zap className="w-4 h-4 text-white fill-current" />
         <span className="font-semibold text-white text-sm">
@@ -26,7 +29,11 @@ export function RayonBadge({ level, xp, xpToNext, compact = false }: RayonBadgeP
   }
 
   return (
-    <div className="p-4 rounded-2xl bg-white/80 backdrop-blur-sm border border-white/50">
+    <motion.div 
+      whileHover={{ scale: 1.02 }}
+      onClick={() => navigate('/app/progression')}
+      className="p-4 rounded-2xl bg-white/80 backdrop-blur-sm border border-white/50 cursor-pointer hover:shadow-md transition-shadow"
+    >
       <div className="flex items-center justify-between mb-3">
         <div className="flex items-center gap-2">
           <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-[var(--color-warning)] to-[var(--color-warning)]/80 flex items-center justify-center">
@@ -55,6 +62,6 @@ export function RayonBadge({ level, xp, xpToNext, compact = false }: RayonBadgeP
           className="h-full bg-gradient-to-r from-[var(--color-warning)] to-[var(--color-warning)]/80 rounded-full"
         />
       </div>
-    </div>
+    </motion.div>
   );
 }

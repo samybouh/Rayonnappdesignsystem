@@ -2,9 +2,12 @@ import { useState } from 'react';
 import { Button } from '../../components/ui/button';
 import { Input } from '../../components/ui/input';
 import { Plus, Search, FolderOpen, FileText, Calendar } from 'lucide-react';
+import { FolderContentDialog } from '../../components/blocks/FolderContentDialog';
 
 export default function Folders() {
   const [searchQuery, setSearchQuery] = useState('');
+  const [selectedFolderId, setSelectedFolderId] = useState<number | null>(null);
+  const [selectedFolderColor, setSelectedFolderColor] = useState<string>('#6F3DFF');
   
   const folders = [
     { id: 1, name: 'Mathématiques', fileCount: 24, lastModified: '2 nov. 2025', color: '#6F3DFF' },
@@ -38,13 +41,13 @@ export default function Folders() {
         {/* Search */}
         <div className="bg-white/80 backdrop-blur-sm rounded-2xl p-4 border border-white/50">
           <div className="relative">
-            <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-[var(--color-text-muted)]" />
+            <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-[var(--color-text-muted)] pointer-events-none z-10" />
             <Input
               type="search"
               placeholder="Rechercher un dossier..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              className="pl-10 h-12 rounded-xl bg-white border-gray-200"
+              className="!pl-12 h-12 rounded-xl bg-white border-gray-200"
             />
           </div>
         </div>
@@ -54,6 +57,10 @@ export default function Folders() {
           {folders.map((folder) => (
             <div
               key={folder.id}
+              onClick={() => {
+                setSelectedFolderId(folder.id);
+                setSelectedFolderColor(folder.color);
+              }}
               className="bg-white/80 backdrop-blur-sm rounded-2xl p-6 border border-white/50 hover:shadow-lg transition-all cursor-pointer group"
             >
               <div className="flex items-start justify-between mb-4">
@@ -86,6 +93,18 @@ export default function Folders() {
           ))}
         </div>
       </div>
+
+      {/* Folder Content Dialog */}
+      <FolderContentDialog
+        open={selectedFolderId !== null}
+        onOpenChange={(open) => {
+          if (!open) {
+            setSelectedFolderId(null);
+          }
+        }}
+        folderId={selectedFolderId}
+        folderColor={selectedFolderColor}
+      />
     </div>
   );
 }

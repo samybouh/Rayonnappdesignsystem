@@ -136,6 +136,8 @@
     background: linear-gradient(135deg, #E8F0FE 0%, #E8F8F5 50%, #FEF3C7 100%);
     background-attachment: fixed;
     min-height: 100vh;
+    overflow-x: hidden;
+    max-width: 100vw;
   }
 }
 

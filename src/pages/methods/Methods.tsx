@@ -1,125 +1,105 @@
-import { Button } from '../../components/ui/button';
-import { Plus, Target, TrendingUp } from 'lucide-react';
-import { Progress } from '../../components/ui/progress';
+import { useState } from 'react';
+import { BookOpen, Headphones, FileText, Target } from 'lucide-react';
+import { MethodCard } from '../../components/blocks/MethodCard';
+import { CustomMethodCard } from '../../components/blocks/CustomMethodCard';
+import { MethodBankDialog } from '../../components/blocks/MethodBankDialog';
 
 export default function Methods() {
-  const methods = [
-    {
-      id: 1,
-      name: 'Pomodoro',
-      objective: 'Améliorer ma concentration',
-      description: 'Technique de travail par intervalles de 25 minutes avec des pauses courtes',
-      progress: 75,
-      sessions: 12,
-      color: '#6F3DFF',
-    },
-    {
-      id: 2,
-      name: 'Fiche de révision',
-      objective: 'Mieux mémoriser',
-      description: 'Créer des fiches synthétiques pour chaque chapitre',
-      progress: 45,
-      sessions: 8,
-      color: '#2E8BFF',
-    },
-    {
-      id: 3,
-      name: 'Mind Mapping',
-      objective: 'Organiser mes idées',
-      description: 'Cartographier visuellement les concepts et leurs liens',
-      progress: 30,
-      sessions: 5,
-      color: '#56E3C2',
-    },
-    {
-      id: 4,
-      name: 'Répétition espacée',
-      objective: 'Ancrer les connaissances',
-      description: 'Réviser à intervalles croissants pour une mémorisation durable',
-      progress: 60,
-      sessions: 15,
-      color: '#F59E0B',
-    },
-  ];
+  const [bankDialogOpen, setBankDialogOpen] = useState(false);
+  const [customMethod, setCustomMethod] = useState<{
+    name: string;
+    description: string;
+  } | null>(null);
+
+  const handleSelectMethod = (method: any) => {
+    setCustomMethod({
+      name: method.name,
+      description: method.description,
+    });
+  };
 
   return (
-    <div className="flex-1 overflow-auto p-6">
-      <div className="max-w-6xl mx-auto space-y-6">
+    <div className="flex-1 overflow-auto p-8">
+      <div className="max-w-[1200px] mx-auto">
         {/* Header */}
-        <div className="flex items-center justify-between">
-          <div>
-            <h1 className="text-3xl font-bold text-[var(--color-text-primary)] mb-2">
-              Mes méthodes
-            </h1>
-            <p className="text-[var(--color-text-muted)]">
-              Découvre et maîtrise différentes techniques d'apprentissage
-            </p>
-          </div>
-          
-          <Button className="bg-gradient-to-r from-[var(--color-primary-start)] to-[var(--color-primary-mid)] hover:opacity-90 gap-2">
-            <Plus className="w-5 h-5" />
-            Nouvelle méthode
-          </Button>
+        <div className="mb-8">
+          <h1 className="text-3xl mb-2">Mes Méthodes de travail</h1>
         </div>
 
-        {/* Methods Grid */}
-        <div className="grid md:grid-cols-2 gap-6">
-          {methods.map((method) => (
-            <div
-              key={method.id}
-              className="bg-white/80 backdrop-blur-sm rounded-3xl p-6 border border-white/50 hover:shadow-lg transition-all cursor-pointer group relative overflow-hidden"
-            >
-              {/* Color accent */}
-              <div 
-                className="absolute top-0 left-0 w-1.5 h-full"
-                style={{ backgroundColor: method.color }}
-              ></div>
-              
-              <div className="pl-3">
-                {/* Header */}
-                <div className="flex items-start justify-between mb-4">
-                  <div className="flex-1">
-                    <h3 className="text-xl font-semibold text-[var(--color-text-primary)] mb-1 group-hover:text-[var(--color-primary-mid)] transition-colors">
-                      {method.name}
-                    </h3>
-                    <div className="flex items-center gap-2 text-sm text-[var(--color-text-muted)]">
-                      <Target className="w-4 h-4" />
-                      <span>{method.objective}</span>
-                    </div>
-                  </div>
-                  
-                  <div 
-                    className="w-12 h-12 rounded-xl flex items-center justify-center"
-                    style={{ backgroundColor: `${method.color}20` }}
-                  >
-                    <TrendingUp className="w-6 h-6" style={{ color: method.color }} />
-                  </div>
-                </div>
+        {/* Methods Grid - 2 colonnes pour plus d'espace */}
+        <div className="grid lg:grid-cols-2 gap-6">
+          {/* 1. Méthode Cornell */}
+          <MethodCard
+            icon={<BookOpen className="w-full h-full" />}
+            title="Méthode Cornell"
+            subtitle="Transforme tes notes en un outil de révision clair et organisé."
+            suggestedPercent={85}
+            description="La méthode Cornell divise ta page en quatre zones pour faciliter la révision active. Cette structure permet de prendre des notes efficacement et de les transformer en support d'apprentissage durable."
+            bgColor="#E8F0FF"
+            iconBgColor="#007AFF"
+            iconColor="#007AFF"
+            buttonColor="#007AFF"
+            onClick={() => console.log('Découvrir Cornell')}
+          />
 
-                {/* Description */}
-                <p className="text-[var(--color-text-secondary)] mb-4">
-                  {method.description}
-                </p>
+          {/* 2. Boucles d'écoute espacées */}
+          <MethodCard
+            icon={<Headphones className="w-full h-full" />}
+            title="Boucles d'écoute espacées"
+            subtitle="Planifier plusieurs écoutes courtes d'un même contenu avec intervalles croissants."
+            suggestedPercent={75}
+            description="Les boucles d'écoute espacées permettent de mémoriser efficacement en écoutant régulièrement un contenu audio de tes cours. Chaque écoute renforce ta compréhension et ancrage mémoriel."
+            bgColor="#E8FFF5"
+            iconBgColor="#00C853"
+            iconColor="#00C853"
+            buttonColor="#00C853"
+            onClick={() => console.log('Découvrir Boucles')}
+          />
 
-                {/* Progress */}
-                <div className="space-y-2">
-                  <div className="flex items-center justify-between text-sm">
-                    <span className="text-[var(--color-text-muted)]">Progression</span>
-                    <span className="font-medium text-[var(--color-text-primary)]">
-                      {method.progress}%
-                    </span>
-                  </div>
-                  <Progress value={method.progress} className="h-2" />
-                  
-                  <div className="text-xs text-[var(--color-text-muted)]">
-                    {method.sessions} sessions complétées
-                  </div>
-                </div>
-              </div>
-            </div>
-          ))}
+          {/* 3. Méthode de la feuille blanche */}
+          <MethodCard
+            icon={<FileText className="w-full h-full" />}
+            title="Méthode de la feuille blanche"
+            subtitle="Une des meilleures méthodes de restitution active selon les neurosciences !"
+            suggestedPercent={95}
+            description="La méthode de la feuille blanche consiste à restituer tout ce dont tu te souviens d'un cours sans aucun support. C'est une technique de rappel actif qui révèle tes véritables lacunes et consolide ta mémoire."
+            bgColor="#F5E8FF"
+            iconBgColor="#9C27FF"
+            iconColor="#9C27FF"
+            buttonColor="#9C27FF"
+            onClick={() => console.log('Découvrir Feuille Blanche')}
+          />
+
+          {/* 4. Feedback */}
+          <MethodCard
+            icon={<Target className="w-full h-full" />}
+            title="Feedback"
+            subtitle="Progresse plus vite en cherchant un retour concret et actionnable."
+            suggestedPercent={80}
+            description="Le feedback régulier permet d'analyser ce qui fonctionne ou non dans ta méthode de travail. Cette pratique d'auto-évaluation te permet d'ajuster continuellement ta stratégie d'apprentissage et de progresser plus rapidement."
+            bgColor="#FFF3E8"
+            iconBgColor="#FF6D00"
+            iconColor="#FF6D00"
+            buttonColor="#FF6D00"
+            onClick={() => console.log('Découvrir Feedback')}
+          />
+
+          {/* 5. Méthode personnalisée - Occupe toute la largeur */}
+          <div className="lg:col-span-2">
+            <CustomMethodCard
+              customMethod={customMethod}
+              onExploreClick={() => setBankDialogOpen(true)}
+            />
+          </div>
         </div>
       </div>
+
+      {/* Method Bank Dialog */}
+      <MethodBankDialog
+        open={bankDialogOpen}
+        onOpenChange={setBankDialogOpen}
+        onSelectMethod={handleSelectMethod}
+      />
     </div>
   );
 }

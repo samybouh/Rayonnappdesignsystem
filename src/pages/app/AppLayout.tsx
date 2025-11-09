@@ -11,7 +11,7 @@ export default function AppLayout() {
       <div className="flex-1 flex overflow-hidden">
         <LeftNav />
         
-        <main className="flex-1 overflow-auto">
+        <main className="flex-1 overflow-auto [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]">
           <Outlet />
         </main>
         
