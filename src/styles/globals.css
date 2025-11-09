@@ -1,17 +1,5 @@
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
 @import './tokens.css';
-@import './mixins.css';
-@import './pages/marketing.css';
-@import './pages/login.css';
-@import './pages/onboarding.css';
-@import './pages/dashboard.css';
-@import './pages/folders.css';
-@import './pages/methods.css';
-@import './pages/journal.css';
-@import './pages/session.css';
-@import './pages/progression.css';
-@import './pages/settings.css';
-@import './pages/stats.css';
 
 @custom-variant dark (&:is(.dark *));
 
